@@ -31,18 +31,15 @@ public class Editing extends GameScene implements SceneMethods {
 	public void update() {
 		updateTick();
 	}
-	
+
 	@Override
 	public void render(Graphics g) {
-	
 
 		drawLevel(g);
 		toolbar.draw(g);
 		drawSelectedTile(g);
 
 	}
-
-	
 
 	private void drawLevel(Graphics g) {
 		for (int y = 0; y < lvl.length; y++) {
@@ -56,7 +53,6 @@ public class Editing extends GameScene implements SceneMethods {
 		}
 	}
 
-	
 	private void drawSelectedTile(Graphics g) {
 		if (selectedTile != null && drawSelect) {
 			g.drawImage(selectedTile.getSprite(), mouseX, mouseY, 32, 32, null);

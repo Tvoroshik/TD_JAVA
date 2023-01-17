@@ -112,22 +112,22 @@ public class BottomBar {
 		drawButtons(g);
 	}
 
-	public void mouseClicked(int x, int y) {
-		if (bMenu.getBounds().contains(x, y))
-			SetGameState(MENU);
-		else if (bSave.getBounds().contains(x, y))
-			saveLevel();
-		else {
-			for (MyButton b : tileButtons) {
-				if (b.getBounds().contains(x, y)) {
-					selectedTile = playing.getTileManger().getTile(b.getId());
-					playing.setSelectedTile(selectedTile);
-					return;
-				}
-			}
-		}
-
-	}
+	//public void mouseClicked(int x, int y) {
+	//	if (bMenu.getBounds().contains(x, y))
+	//		SetGameState(MENU);
+	//	else if (bSave.getBounds().contains(x, y))
+	//		saveLevel();
+	//	else {
+	//		for (MyButton b : tileButtons) {
+	//			if (b.getBounds().contains(x, y)) {
+	//				selectedTile = playing.getTileManger().getTile(b.getId());
+	//				playing.setSelectedTile(selectedTile);
+	//				return;
+	//			}
+	//		}
+	//	}
+	//
+	//	}
 
 	public void mouseMoved(int x, int y) {
 		bMenu.setMouseOver(false);
