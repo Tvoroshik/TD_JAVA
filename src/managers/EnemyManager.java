@@ -4,11 +4,16 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import enemies.Bat;
 import enemies.Enemy;
+import enemies.Knight;
+import enemies.Orc;
+import enemies.Wolf;
 import helpz.LoadSave;
 import scenes.Playing;
 import static helpz.Constants.Direction.*;
 import static helpz.Constants.Tiles.*;
+import static helpz.Constants.Enemies.*;
 
 public class EnemyManager {
 
@@ -20,7 +25,10 @@ public class EnemyManager {
 	public EnemyManager(Playing playing) {
 		this.playing = playing;
 		enemyImgs = new BufferedImage[4];
-		addEnemy(3 * 32, 6 * 32);
+		addEnemy(0 * 32, 19 * 32, ORC);
+		addEnemy(0 * 32, 8 * 32, BAT);
+		addEnemy(2 * 32, 8 * 32, KNIGHT);
+		addEnemy(0 * 32, 14 * 32, WOLF);
 		loadEnemyImgs();
 	}
 
@@ -118,8 +126,22 @@ public class EnemyManager {
 		return 0;
 	}
 
-	public void addEnemy(int x, int y) {
-		enemies.add(new Enemy(x, y, 0, 0));
+	public void addEnemy(int x, int y, int enemyType) {
+		switch(enemyType) {
+		case ORC:
+			enemies.add(new Orc(x,y,0));
+			break;
+		case BAT:
+			enemies.add(new Bat(x,y,0));
+			break;
+		case KNIGHT:
+			enemies.add(new Knight(x,y,0));
+			break;
+		case WOLF:
+			enemies.add(new Wolf(x,y,0));
+			break;
+		}
+
 	}
 
 	public void draw(Graphics g) {
@@ -129,7 +151,7 @@ public class EnemyManager {
 	}
 
 	private void drawEnemy(Enemy e, Graphics g) {
-		g.drawImage(enemyImgs[0], (int) e.getX(), (int) e.getY(), null);
+		g.drawImage(enemyImgs[e.getEnemyType()], (int) e.getX(), (int) e.getY(), null);
 	}
 
 }
