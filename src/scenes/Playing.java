@@ -1,7 +1,6 @@
 package scenes;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import helpz.LoadSave;
@@ -9,27 +8,28 @@ import main.Game;
 import managers.EnemyManager;
 import managers.TowerManager;
 import objects.PathPoint;
+import objects.Tower;
 import ui.ActionBar;
+import static helpz.Constants.Tiles.GRASS_TILE;
 
 public class Playing extends GameScene implements SceneMethods {
 
 	private int[][] lvl;
+
 	private ActionBar actionBar;
 	private int mouseX, mouseY;
 	private EnemyManager enemyManager;
 	private TowerManager towerManager;
 	private PathPoint start, end;
+	private Tower selectedTower;
 
 	public Playing(Game game) {
 		super(game);
-
 		loadDefaultLevel();
 
 		actionBar = new ActionBar(0, 640, 640, 160, this);
-
 		enemyManager = new EnemyManager(this, start, end);
 		towerManager = new TowerManager(this);
-
 	}
 
 	private void loadDefaultLevel() {
@@ -49,13 +49,22 @@ public class Playing extends GameScene implements SceneMethods {
 		towerManager.update();
 	}
 
+	public void setSelectedTower(Tower selectedTower) {
+		this.selectedTower = selectedTower;
+	}
+
 	@Override
 	public void render(Graphics g) {
-
 		drawLevel(g);
 		actionBar.draw(g);
 		enemyManager.draw(g);
 		towerManager.draw(g);
+		drawSelectedTower(g);
+	}
+
+	private void drawSelectedTower(Graphics g) {
+		if (selectedTower != null)
+			g.drawImage(towerManager.getTowerImgs()[selectedTower.getTowerType()], mouseX, mouseY, null);
 	}
 
 	private void drawLevel(Graphics g) {
@@ -86,10 +95,36 @@ public class Playing extends GameScene implements SceneMethods {
 
 	@Override
 	public void mouseClicked(int x, int y) {
+		// Below 640y
 		if (y >= 640)
 			actionBar.mouseClicked(x, y);
-//		else
-//			enemyManager.addEnemy(x, y);
+		else {
+			// Above 640y
+			if (selectedTower != null) {
+				// Trying to place a tower
+				if (isTileGrass(mouseX, mouseY)) {
+					if (getTowerAt(mouseX, mouseY) == null) {
+						towerManager.addTower(selectedTower, mouseX, mouseY);
+						selectedTower = null;
+					}
+				}
+			} else {
+				// Not trying to place a tower
+				// Checking if a tower exists at x,y
+				Tower t = getTowerAt(mouseX, mouseY);
+				actionBar.displayTower(t);
+			}
+		}
+	}
+
+	private Tower getTowerAt(int x, int y) {
+		return towerManager.getTowerAt(x, y);
+	}
+
+	private boolean isTileGrass(int x, int y) {
+		int id = lvl[y / 32][x / 32];
+		int tileType = game.getTileManager().getTile(id).getTileType();
+		return tileType == GRASS_TILE;
 	}
 
 	@Override
@@ -104,9 +139,9 @@ public class Playing extends GameScene implements SceneMethods {
 
 	@Override
 	public void mousePressed(int x, int y) {
-		if (y >= 640) {
+		if (y >= 640)
 			actionBar.mousePressed(x, y);
-		}
+
 	}
 
 	@Override
@@ -117,6 +152,10 @@ public class Playing extends GameScene implements SceneMethods {
 	@Override
 	public void mouseDragged(int x, int y) {
 
+	}
+
+	public TowerManager getTowerManager() {
+		return towerManager;
 	}
 
 }
