@@ -54,6 +54,9 @@ public class ActionBar extends Bar {
 		}
 	}
 
+	private void drawButtonFeedback(Graphics g, MyButton b) {
+	}
+
 	public void draw(Graphics g) {
 
 		// Background
