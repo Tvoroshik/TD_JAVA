@@ -29,7 +29,7 @@ public class ActionBar extends Bar {
 
 	private void initButtons() {
 
-	bMenu = new MyButton("Menu", 2, 642, 100, 30);
+		bMenu = new MyButton("Menu", 2, 642, 100, 30);
 
 		towerButtons = new MyButton[3];
 		int w = 50;
@@ -40,10 +40,11 @@ public class ActionBar extends Bar {
 
 		for (int i = 0; i < towerButtons.length; i++)
 			towerButtons[i] = new MyButton("", xStart + xOffset * i, yStart, w, h, i);
+
 	}
 
 	private void drawButtons(Graphics g) {
-			bMenu.draw(g);
+		bMenu.draw(g);
 
 		for (MyButton b : towerButtons) {
 			g.setColor(Color.gray);
@@ -64,8 +65,8 @@ public class ActionBar extends Bar {
 
 		// DisplayedTower
 		drawDisplayedTower(g);
-	}
 
+	}
 
 	private void drawDisplayedTower(Graphics g) {
 		if (displayedTower != null) {
