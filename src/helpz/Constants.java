@@ -6,7 +6,6 @@ public class Constants {
 		public static final int CANNON = 0;
 		public static final int ARCHER = 1;
 		public static final int WIZARD = 2;
-	
 
 		public static String GetName(int towerType) {
 			switch (towerType) {
@@ -19,7 +18,47 @@ public class Constants {
 			}
 			return "";
 		}
+
+		public static float GetStartDmg(int towerType) {
+			switch (towerType) {
+			case CANNON:
+				return 25;
+			case ARCHER:
+				return 15;
+			case WIZARD:
+				return 5;
+			}
+
+			return 0;
+		}
+
+		public static float GetDefaultRange(int towerType) {
+			switch (towerType) {
+			case CANNON:
+				return 100;
+			case ARCHER:
+				return 100;
+			case WIZARD:
+				return 100;
+			}
+
+			return 0;
+		}
+
+		public static float GetDefaultCooldown(int towerType) {
+			switch (towerType) {
+			case CANNON:
+				return 10;
+			case ARCHER:
+				return 10;
+			case WIZARD:
+				return 10;
+			}
+
+			return 0;
+		}
 	}
+
 	public static class Direction {
 		public static final int LEFT = 0;
 		public static final int UP = 1;
@@ -45,10 +84,22 @@ public class Constants {
 			case WOLF:
 				return 0.75f;
 			}
-
 			return 0;
 		}
 
+		public static int GetStartHealth(int enemyType) {
+			switch (enemyType) {
+			case ORC:
+				return 100;
+			case BAT:
+				return 60;
+			case KNIGHT:
+				return 250;
+			case WOLF:
+				return 85;
+			}
+			return 0;
+		}
 	}
 
 	public static class Tiles {
