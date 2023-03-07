@@ -1,180 +1,90 @@
-package scenes;
+package objects;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+public class Tower {
 
-import helpz.LoadSave;
-import main.Game;
-import managers.EnemyManager;
-import managers.TowerManager;
-import objects.PathPoint;
-import objects.Tower;
-import ui.ActionBar;
-import static helpz.Constants.Tiles.GRASS_TILE;
+	private int x, y, id, towerType, cdTick, dmg;
+	private float range, cooldown;
 
-public class Playing extends GameScene implements SceneMethods {
-
-	private int[][] lvl;
-
-	private ActionBar actionBar;
-	private int mouseX, mouseY;
-	private EnemyManager enemyManager;
-	private TowerManager towerManager;
-	private PathPoint start, end;
-	private Tower selectedTower;
-
-	public Playing(Game game) {
-		super(game);
-		loadDefaultLevel();
-
-		actionBar = new ActionBar(0, 640, 640, 160, this);
-		enemyManager = new EnemyManager(this, start, end);
-		towerManager = new TowerManager(this);
-	}
-
-	private void loadDefaultLevel() {
-		lvl = LoadSave.GetLevelData("new_level");
-		ArrayList<PathPoint> points = LoadSave.GetLevelPathPoints("new_level");
-		start = points.get(0);
-		end = points.get(1);
-	}
-
-	public void setLevel(int[][] lvl) {
-		this.lvl = lvl;
+	public Tower(int x, int y, int id, int towerType) {
+		this.x = x;
+		this.y = y;
+		this.id = id;
+		this.towerType = towerType;
+		setDefaultDmg();
+		setDefaultRange();
+		setDefaultCooldown();
 	}
 
 	public void update() {
-		updateTick();
-		enemyManager.update();
-		towerManager.update();
+		cdTick++;
 	}
 
-	public void setSelectedTower(Tower selectedTower) {
-		this.selectedTower = selectedTower;
+	public boolean isCooldownOver() {
+
+		return cdTick >= cooldown;
 	}
 
-	@Override
-	public void render(Graphics g) {
-		drawLevel(g);
-		actionBar.draw(g);
-		enemyManager.draw(g);
-		towerManager.draw(g);
-		drawSelectedTower(g);
-		drawHighlight(g);
+	public void resetCooldown() {
+		cdTick = 0;
 	}
 
-	private void drawHighlight(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.drawRect(mouseX, mouseY, 32, 32);
+	private void setDefaultCooldown() {
+		cooldown = helpz.Constants.Towers.GetDefaultCooldown(towerType);
 
 	}
 
-	private void drawSelectedTower(Graphics g) {
-		if (selectedTower != null)
-			g.drawImage(towerManager.getTowerImgs()[selectedTower.getTowerType()], mouseX, mouseY, null);
-	}
-
-	private void drawLevel(Graphics g) {
-
-		for (int y = 0; y < lvl.length; y++) {
-			for (int x = 0; x < lvl[y].length; x++) {
-				int id = lvl[y][x];
-				if (isAnimation(id)) {
-					g.drawImage(getSprite(id, animationIndex), x * 32, y * 32, null);
-				} else
-					g.drawImage(getSprite(id), x * 32, y * 32, null);
-			}
-		}
-	}
-
-	public int getTileType(int x, int y) {
-		int xCord = x / 32;
-		int yCord = y / 32;
-
-		if (xCord < 0 || xCord > 19)
-			return 0;
-		if (yCord < 0 || yCord > 19)
-			return 0;
-
-		int id = lvl[y / 32][x / 32];
-		return game.getTileManager().getTile(id).getTileType();
-	}
-
-	@Override
-	public void mouseClicked(int x, int y) {
-		// Below 640y
-		if (y >= 640)
-			actionBar.mouseClicked(x, y);
-		else {
-			// Above 640y
-			if (selectedTower != null) {
-				// Trying to place a tower
-				if (isTileGrass(mouseX, mouseY)) {
-					if (getTowerAt(mouseX, mouseY) == null) {
-						towerManager.addTower(selectedTower, mouseX, mouseY);
-						selectedTower = null;
-					}
-				}
-			} else {
-				// Not trying to place a tower
-				// Checking if a tower exists at x,y
-				Tower t = getTowerAt(mouseX, mouseY);
-				actionBar.displayTower(t);
-			}
-		}
-	}
-
-	private Tower getTowerAt(int x, int y) {
-		return towerManager.getTowerAt(x, y);
-	}
-
-	private boolean isTileGrass(int x, int y) {
-		int id = lvl[y / 32][x / 32];
-		int tileType = game.getTileManager().getTile(id).getTileType();
-		return tileType == GRASS_TILE;
-	}
-
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			selectedTower = null;
-		}
-	}
-
-	@Override
-	public void mouseMoved(int x, int y) {
-		if (y >= 640)
-			actionBar.mouseMoved(x, y);
-		else {
-			mouseX = (x / 32) * 32;
-			mouseY = (y / 32) * 32;
-		}
-	}
-
-	@Override
-	public void mousePressed(int x, int y) {
-		if (y >= 640)
-			actionBar.mousePressed(x, y);
+	private void setDefaultRange() {
+		range = helpz.Constants.Towers.GetDefaultRange(towerType);
 
 	}
 
-	@Override
-	public void mouseReleased(int x, int y) {
-		actionBar.mouseReleased(x, y);
-	}
-
-	@Override
-	public void mouseDragged(int x, int y) {
+	private void setDefaultDmg() {
+		dmg = helpz.Constants.Towers.GetStartDmg(towerType);
 
 	}
 
-	public TowerManager getTowerManager() {
-		return towerManager;
+	public int getX() {
+		return x;
 	}
 
-	public EnemyManager getEnemyManager() {
-		return enemyManager;
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getTowerType() {
+		return towerType;
+	}
+
+	public void setTowerType(int towerType) {
+		this.towerType = towerType;
+	}
+
+	public int getDmg() {
+		return dmg;
+	}
+
+	public float getRange() {
+		return range;
+	}
+
+	public float getCooldown() {
+		return cooldown;
 	}
 
 }
