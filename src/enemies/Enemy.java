@@ -12,10 +12,7 @@ public abstract class Enemy {
 	protected int ID;
 	protected int enemyType;
 	protected int lastDir;
-<<<<<<< HEAD
 	protected boolean alive = true;
-=======
->>>>>>> 74c5f11c9b1ac3cc9ffb4d0cb7a08af126658516
 
 	public Enemy(float x, float y, int ID, int enemyType) {
 		this.x = x;
@@ -30,15 +27,12 @@ public abstract class Enemy {
 	private void setStartHealth() {
 		health = helpz.Constants.Enemies.GetStartHealth(enemyType);
 		maxHealth = health;
-<<<<<<< HEAD
 	}
 
 	public void hurt(int dmg) {
 		this.health -= dmg;
 		if (health <= 0)
 			alive = false;
-=======
->>>>>>> 74c5f11c9b1ac3cc9ffb4d0cb7a08af126658516
 	}
 
 	public void move(float speed, int dir) {
